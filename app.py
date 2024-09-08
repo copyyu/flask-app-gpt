@@ -24,32 +24,27 @@ def analyze_sentiment():
         openai.api_key = os.getenv("OPENAI_API_KEY")
 
         # Make a request to the OpenAI GPT-3.5 API
+        text = "ทำอะไรดี"
+        
+        # Make a request to the OpenAI GPT-3.5 API
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo-0125",
             messages=[
-                {
-                    "role": "system",
-                    "content": "Analyze the sentiment of the following text:",
-                },
-                {"role": "user", "content": text},
-            ],
-        )
+                # prompt
+                {"role": "system", "content": "สุ่มตอบกิจกรรมอะไรก็ได้มา2อย่างไม่ซ้ำกับในเเต่ละครั้งที่ถามบอกด้วยว่าทำกิจกรรมนี้จะได้อะไร"},
+                {"role": "user", "content": text}
+    ]
+)
+# Extract the response text
+response_text = response['choices'][0]['message']['content'].strip()
+
+print("Response from GPT-3.5:", response_text)
+
 
         # Extract the sentiment from the response
         sentiment_response = response["choices"][0]["message"]["content"].strip()
         # print(sentiment_response)
 
-        # Assuming that sentiment_response contains the sentiment in neg, neu, or pos format
-        if "neg" in sentiment_response.lower():
-            sentiment = "neg"
-        elif "neu" in sentiment_response.lower():
-            sentiment = "neu"
-        elif "pos" in sentiment_response.lower():
-            sentiment = "pos"
-        else:
-            sentiment = "unknown"
-
-        return jsonify({"sentiment": sentiment})
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
